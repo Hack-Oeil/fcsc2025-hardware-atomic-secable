@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <!--Page Title-->
+    <title>Hack-Oeil - Les CTFs de Cyrhades</title>
+    <!--Meta Keywords and Description-->
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <link rel="shortcut icon" href="./assets/images/favicon.ico" title="Favicon" />
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <script src="./assets/js/highlight.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Vérifie si la fenêtre est dans une iframe
+            if (window.self !== window.top) {
+                document.querySelectorAll('a').forEach((link) => {
+                    link.addEventListener('click', (event) => {
+                        const a = event.target.closest('a[href^="http"]');
+                        if (a) {
+                            event.preventDefault();
+                            window.parent.postMessage({
+                                type: "open-external",
+                                url: a.href
+                            }, "*");
+                        }
+                    });
+                });
+            }
+            // Active la coloration syntaxique :
+            if (window.hljs) {
+                hljs.highlightAll();
+            } else {
+                console.error("Highlight.js non chargé !");
+            }
+        });
+    </script>
+</head>
+
+<body>
+
+    <div id="wrapper">
+        <!--Main Content Area-->
+        <main id="content">
+            <!--Ctf-->
+            <section class="ctf scrollto">
+                <article class="row clearfix">
+                    <div class="col-1">
+                        <div class="section-heading">
+                            <h3>Thử thách #578</h3>
+                            <h2 class="section-title">Atomic secable</h2>
+                            <p>
+Ông Performances đang tìm kiếm một thuật toán hiệu quả để tính toán phép nhân trên đường cong elliptic đồng thời bảo vệ khỏi các cuộc tấn công vật lý.
+<br /><br />
+Ông đã chọn một phương pháp triển khai luật cộng trên đường cong tuân theo nguyên tắc nguyên tử (atomicity). Nguyên tắc này dựa trên một chuỗi thao tác đồng nhất duy nhất để tính toán phép nhân đôi điểm (doubling) hoặc phép cộng hai điểm phân biệt; điều này mang lại khả năng bảo vệ rất tốt trước các cuộc tấn công phân tích thời gian thực thi hoặc phân tích vết rò rỉ qua kênh phụ (side-channel). Biện pháp bảo vệ này thực sự cần thiết, vì việc phân biệt được thao tác nào được thực hiện (nhân đôi hay cộng) sẽ làm lộ thông tin về các bit của đại lượng vô hướng (scalar), vốn phải được giữ bí mật.
+<br /><br />
+Bằng cách thêm các thao tác giả (dummy operations), khá dễ dàng để có được hai chuỗi giống hệt nhau cho phép nhân đôi hoặc phép cộng điểm, nhưng điều đó sẽ làm giảm hiệu năng.
+<br /><br />
+Ông Performances, trung thành với các nguyên tắc của mình, sử dụng một chuỗi mà không làm giảm hiệu năng! Chuỗi của ông được điều chỉnh cho các đường cong có dạng <code>y^2 = x^3 + b</code> và chỉ chứa 9 phép nhân modulo. Ông thách bạn phá vỡ cách triển khai của mình đối với đường cong tiêu chuẩn secp192k1 (có dạng thích hợp) bằng cách sử dụng tấn công gây lỗi (fault attack). Tuy nhiên, ông đã thiết lập các biện pháp đối phó để hạn chế một cuộc tấn công như vậy:
+<br /><br />
+- các bit của đại lượng vô hướng được đọc hai lần (và so sánh) trước khi bắt đầu một chuỗi;
+<br />
+- các tọa độ cuối cùng <code>(x, y)</code> phải tạo thành một điểm hợp lệ trên đường cong.
+<br /><br />
+Để làm điều này, ông cung cấp mã hợp ngữ có chú thích cho phép tính toán phép nhân với điểm sinh (generator) trên đường cong. Trong khuôn khổ thử thách, mã được thực thi trong một máy ảo và bạn có thể chỉ định các lệnh cần can thiệp lỗi. Không có giới hạn về số lượng lệnh can thiệp, nhưng mô hình lỗi chỉ bao gồm việc gán một giá trị ngẫu nhiên cho thanh ghi đích của thao tác. Ví dụ: để gây lỗi ở ba lệnh đầu tiên, hãy nhập <code>0 1 2</code> (phân tách bằng dấu cách) sau dấu nhắc.
+<br /><br />
+Tài liệu về máy ảo có sẵn <a href="https://hackropole.fr/fr/doc/vm2025/">trên trang này</a>.
+                            </p>
+                            <h4>Tệp cần nghiên cứu:</h4>
+                            <ul>
+                                <li><a href="../files/assembly.py">assembly.py</a></li>
+                                <li><a href="../files/atomic-secable.py">atomic-secable.py</a></li>
+                                <li><a href="../files/crypto_accelerator.py">crypto_accelerator.py</a></li>
+                                <li><a href="../files/ecdsa_keygen.asm">ecdsa_keygen.asm</a></li>
+                                <li><a href="../files/machine_faulted.py">machine_faulted.py</a></li>
+                                <li><a href="../files/machine.py">machine.py</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="row clearfix">
+                    <div class="col-1">
+                        <div class="section-heading">
+                            <h3>FCSC 2025</h3>
+                            <h2 class="section-title">Hackropole</h2>
+                            <p class="section-subtitle">
+                                Liên kết chính thức:
+                                <a target="_blank" href="https://hackropole.fr/fr/challenges/hardware/fcsc2025-hardware-atomic-secable/">https://hackropole.fr/fr/challenges/hardware/fcsc2025-hardware-atomic-secable/</a>
+                                <br />
+                                Tác giả: Neige
+                            </p>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="row clearfix">
+                    <div class="col-1">
+                        <div class="section-heading">
+                            <h3>Học tập</h3>
+                            <h2 class="section-title">Tài liệu và Video</h2>
+                            <p class="section-subtitle">
+                                Hiện tại chưa có tài liệu
+                            </p>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="row clearfix">
+                    <div class="col-1">
+                        <div class="section-heading">
+                            <h3>Trợ giúp</h3>
+                            <h2 class="section-title">Lời khuyên và gợi ý</h2>
+                            <p class="section-subtitle">
+                                <a target="_blank"
+                                    href="https://discord.com/channels/1175764392307077120/1175764601716092948">Luồng trên Discord</a>
+                            </p>
+                        </div>
+                    </div>
+                </article>
+            </section>
+            <!--End of Ctf-->
+        </main>
+        <!--End Main Content Area-->
+
+        <a id="scrollUp" href="#wrapper" style="position: fixed; z-index: 1000;"
+            aria-label="Cuộn lên đầu trang" title="Về đầu trang"></a>
+    </div>
+</body>
+
+</html>

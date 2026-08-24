@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <!--Page Title-->
+    <title>Hack-Oeil - Les CTFs de Cyrhades</title>
+    <!--Meta Keywords and Description-->
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <link rel="shortcut icon" href="./assets/images/favicon.ico" title="Favicon" />
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <script src="./assets/js/highlight.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Vérifie si la fenêtre est dans une iframe
+            if (window.self !== window.top) {
+                document.querySelectorAll('a').forEach((link) => {
+                    link.addEventListener('click', (event) => {
+                        const a = event.target.closest('a[href^="http"]');
+                        if (a) {
+                            event.preventDefault();
+                            window.parent.postMessage({
+                                type: "open-external",
+                                url: a.href
+                            }, "*");
+                        }
+                    });
+                });
+            }
+            // Active la coloration syntaxique :
+            if (window.hljs) {
+                hljs.highlightAll();
+            } else {
+                console.error("Highlight.js non chargé !");
+            }
+        });
+    </script>
+</head>
+
+<body>
+
+    <div id="wrapper">
+        <!--Main Content Area-->
+        <main id="content">
+            <!--Ctf-->
+            <section class="ctf scrollto">
+                <article class="row clearfix">
+                    <div class="col-1">
+                        <div class="section-heading">
+                            <h3>Challenge #578</h3>
+                            <h2 class="section-title">Atomic secable</h2>
+                            <p>
+Mr Performances is looking for an efficient algorithm to compute multiplication on an elliptic curve while protecting against physical attacks.
+<br /><br />
+He chose an implementation of the curve addition law that follows the atomicity principle. This principle relies on a single, uniform sequence of operations to compute either point doubling or the addition of two distinct points, which provides strong protection against execution-time analysis attacks or side-channel leakage trace analysis. This protection is indeed necessary, as distinguishing the performed operation (doubling or addition) leaks information about the bits of the scalar, which is supposed to remain secret.
+<br /><br />
+By adding dummy operations, it is fairly easy to obtain two identical sequences for evaluating point doubling or addition, but this would come at the cost of performance.
+<br /><br />
+Mr Performances, true to his principles, uses a sequence without any loss of performance! His sequence is tailored for curves of the form <code>y^2 = x^3 + b</code> and contains only 9 modular multiplications. He challenges you to break his implementation for the standard curve secp192k1 (which has this form) using a fault attack. However, he has implemented countermeasures to mitigate such an attack:
+<br /><br />
+- the scalar bits are read twice (and compared) before executing a sequence;
+<br />
+- the final coordinates <code>(x, y)</code> must form a valid point on the curve.
+<br /><br />
+To this end, he provides his commented assembly code for computing multiplication with the generator on the curve. In this challenge, the code is executed in a virtual machine and you can specify the instructions to disrupt. There is no limit on the number of instructions to disrupt, but the fault model consists solely of assigning a random value to the operation's destination register. For example, to fault the first three instructions, enter <code>0 1 2</code> (separated by spaces) after the prompt.
+<br /><br />
+The virtual machine documentation is available <a href="https://hackropole.fr/fr/doc/vm2025/">on this page</a>.
+                            </p>
+                            <h4>File(s) to study:</h4>
+                            <ul>
+                                <li><a href="../files/assembly.py">assembly.py</a></li>
+                                <li><a href="../files/atomic-secable.py">atomic-secable.py</a></li>
+                                <li><a href="../files/crypto_accelerator.py">crypto_accelerator.py</a></li>
+                                <li><a href="../files/ecdsa_keygen.asm">ecdsa_keygen.asm</a></li>
+                                <li><a href="../files/machine_faulted.py">machine_faulted.py</a></li>
+                                <li><a href="../files/machine.py">machine.py</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="row clearfix">
+                    <div class="col-1">
+                        <div class="section-heading">
+                            <h3>FCSC 2025</h3>
+                            <h2 class="section-title">Hackropole</h2>
+                            <p class="section-subtitle">
+                                Official link:
+                                <a target="_blank" href="https://hackropole.fr/fr/challenges/hardware/fcsc2025-hardware-atomic-secable/">https://hackropole.fr/fr/challenges/hardware/fcsc2025-hardware-atomic-secable/</a>
+                                <br />
+                                Author: Neige
+                            </p>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="row clearfix">
+                    <div class="col-1">
+                        <div class="section-heading">
+                            <h3>Learning</h3>
+                            <h2 class="section-title">Documentation and Videos</h2>
+                            <p class="section-subtitle">
+                                No documentation at this time
+                            </p>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="row clearfix">
+                    <div class="col-1">
+                        <div class="section-heading">
+                            <h3>Help</h3>
+                            <h2 class="section-title">Tips and hints</h2>
+                            <p class="section-subtitle">
+                                <a target="_blank"
+                                    href="https://discord.com/channels/1175764392307077120/1175764601716092948">Discord thread</a>
+                            </p>
+                        </div>
+                    </div>
+                </article>
+            </section>
+            <!--End of Ctf-->
+        </main>
+        <!--End Main Content Area-->
+
+        <a id="scrollUp" href="#wrapper" style="position: fixed; z-index: 1000;"
+            aria-label="Back to top" title="Back to top"></a>
+    </div>
+</body>
+
+</html>

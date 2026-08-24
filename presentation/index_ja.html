@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <!--Page Title-->
+    <title>Hack-Oeil - Les CTFs de Cyrhades</title>
+    <!--Meta Keywords and Description-->
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <link rel="shortcut icon" href="./assets/images/favicon.ico" title="Favicon" />
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <script src="./assets/js/highlight.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Vérifie si la fenêtre est dans une iframe
+            if (window.self !== window.top) {
+                document.querySelectorAll('a').forEach((link) => {
+                    link.addEventListener('click', (event) => {
+                        const a = event.target.closest('a[href^="http"]');
+                        if (a) {
+                            event.preventDefault();
+                            window.parent.postMessage({
+                                type: "open-external",
+                                url: a.href
+                            }, "*");
+                        }
+                    });
+                });
+            }
+            // Active la coloration syntaxique :
+            if (window.hljs) {
+                hljs.highlightAll();
+            } else {
+                console.error("Highlight.js non chargé !");
+            }
+        });
+    </script>
+</head>
+
+<body>
+
+    <div id="wrapper">
+        <!--Main Content Area-->
+        <main id="content">
+            <!--Ctf-->
+            <section class="ctf scrollto">
+                <article class="row clearfix">
+                    <div class="col-1">
+                        <div class="section-heading">
+                            <h3>チャレンジ #578</h3>
+                            <h2 class="section-title">Atomic secable</h2>
+                            <p>
+Mr Performancesは、物理的攻撃から保護しながら楕円曲線上のスカラー倍算を計算する効率的なアルゴリズムを探しています。
+<br /><br />
+彼は原子性（アトミシティ）の原則に従った曲線上の加法の実装を選択しました。この原則は、点の2倍算または2つの異なる点の加算を計算するために単一の共通の演算シーケンスを使用することに基づいており、実行時間解析攻撃やサイドチャネル漏洩波形解析に対して非常に優れた保護を提供します。実行された操作（2倍算か加算か）の判別によって秘密であるべきスカラーのビット情報が漏洩するため、この保護は不可欠です。
+<br /><br />
+ダミー演算を追加すれば、2倍算と加算で2つの同一のシーケンスを得ることは比較的容易ですが、パフォーマンスが犠牲になります。
+<br /><br />
+Mr Performancesはその原則に従い、パフォーマンスの低下がないシーケンスを採用しています！彼のシーケンスは <code>y^2 = x^3 + b</code> の形式の曲線向けに最適化されており、剰余乗算はわずか9回しか含まれていません。彼は、この形式を持つ標準曲線 secp192k1 に対する彼の実装をフォールト攻撃（障害注入攻撃）で破ることをあなたに課しました。ただし、このような攻撃を制限するための対策も講じられています：
+<br /><br />
+- スカラーのビットはシーケンスを開始する前に2回読み取られ（比較され）ます；
+<br />
+- 最終的な座標 <code>(x, y)</code> は曲線上の有効な点を構成しなければなりません。
+<br /><br />
+そのために、曲線上の生成元との乗算を計算するコメント付きのアセンブリコードが提供されています。この課題では、コードは仮想マシン内で実行され、妨害（フォールト注入）する命令を指定できます。妨害する命令の数に制限はありませんが、フォールトモデルは演算の出力先レジスタにランダムな値を割り当てることのみで構成されます。たとえば、最初の3つの命令にフォールトを注入するには、プロンプトの後に <code>0 1 2</code>（スペース区切り）と入力します。
+<br /><br />
+仮想マシンのドキュメントは<a href="https://hackropole.fr/fr/doc/vm2025/">こちらのページ</a>で確認できます。
+                            </p>
+                            <h4>調査対象ファイル:</h4>
+                            <ul>
+                                <li><a href="../files/assembly.py">assembly.py</a></li>
+                                <li><a href="../files/atomic-secable.py">atomic-secable.py</a></li>
+                                <li><a href="../files/crypto_accelerator.py">crypto_accelerator.py</a></li>
+                                <li><a href="../files/ecdsa_keygen.asm">ecdsa_keygen.asm</a></li>
+                                <li><a href="../files/machine_faulted.py">machine_faulted.py</a></li>
+                                <li><a href="../files/machine.py">machine.py</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="row clearfix">
+                    <div class="col-1">
+                        <div class="section-heading">
+                            <h3>FCSC 2025</h3>
+                            <h2 class="section-title">Hackropole</h2>
+                            <p class="section-subtitle">
+                                公式リンク:
+                                <a target="_blank" href="https://hackropole.fr/fr/challenges/hardware/fcsc2025-hardware-atomic-secable/">https://hackropole.fr/fr/challenges/hardware/fcsc2025-hardware-atomic-secable/</a>
+                                <br />
+                                作成者: Neige
+                            </p>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="row clearfix">
+                    <div class="col-1">
+                        <div class="section-heading">
+                            <h3>学習</h3>
+                            <h2 class="section-title">ドキュメントと動画</h2>
+                            <p class="section-subtitle">
+                                現在ドキュメントはありません
+                            </p>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="row clearfix">
+                    <div class="col-1">
+                        <div class="section-heading">
+                            <h3>ヘルプ</h3>
+                            <h2 class="section-title">ヒントとアドバイス</h2>
+                            <p class="section-subtitle">
+                                <a target="_blank"
+                                    href="https://discord.com/channels/1175764392307077120/1175764601716092948">Discordスレッド</a>
+                            </p>
+                        </div>
+                    </div>
+                </article>
+            </section>
+            <!--End of Ctf-->
+        </main>
+        <!--End Main Content Area-->
+
+        <a id="scrollUp" href="#wrapper" style="position: fixed; z-index: 1000;"
+            aria-label="ページトップへ戻る" title="トップへ戻る"></a>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <!--Page Title-->
+    <title>Hack-Oeil - Les CTFs de Cyrhades</title>
+    <!--Meta Keywords and Description-->
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <link rel="shortcut icon" href="./assets/images/favicon.ico" title="Favicon" />
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <script src="./assets/js/highlight.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Vérifie si la fenêtre est dans une iframe
+            if (window.self !== window.top) {
+                document.querySelectorAll('a').forEach((link) => {
+                    link.addEventListener('click', (event) => {
+                        const a = event.target.closest('a[href^="http"]');
+                        if (a) {
+                            event.preventDefault();
+                            window.parent.postMessage({
+                                type: "open-external",
+                                url: a.href
+                            }, "*");
+                        }
+                    });
+                });
+            }
+            // Active la coloration syntaxique :
+            if (window.hljs) {
+                hljs.highlightAll();
+            } else {
+                console.error("Highlight.js non chargé !");
+            }
+        });
+    </script>
+</head>
+
+<body>
+
+    <div id="wrapper">
+        <!--Main Content Area-->
+        <main id="content">
+            <!--Ctf-->
+            <section class="ctf scrollto">
+                <article class="row clearfix">
+                    <div class="col-1">
+                        <div class="section-heading">
+                            <h3>โจทย์ท้าทาย #578</h3>
+                            <h2 class="section-title">Atomic secable</h2>
+                            <p>
+คุณ Performances กำลังค้นหาอัลกอริทึมที่มีประสิทธิภาพในการคำนวณการคูณบนเส้นโค้งวงรีพร้อมทั้งป้องกันการโจมตีทางกายภาพ
+<br /><br />
+เขาเลือกใช้การนำกฎการบวกบนเส้นโค้งไปใช้งานตามหลักการอะตอมมิกซิตี้ (atomicity) หลักการนี้อาศัยลำดับการทำงานชุดเดียวที่เหมือนกันในการคำนวณทั้งการเพิ่มเป็นสองเท่าของจุด (doubling) หรือการบวกจุดสองจุดที่แตกต่างกัน ซึ่งให้การป้องกันที่ดีมากจากการโจมตีด้วยการวิเคราะห์เวลาการทำงานหรือการวิเคราะห์ร่องรอยการรั่วไหลผ่านช่องทางข้างเคียง (side-channel) การป้องกันนี้จำเป็นอย่างยิ่ง เนื่องจากความสามารถในการแยกแยะการทำงาน (การเพิ่มเป็นสองเท่าหรือการบวก) จะทำให้สามารถดึงข้อมูลเกี่ยวกับบิตของสเกลาร์ซึ่งควรเป็นความลับออกมาได้
+<br /><br />
+การเพิ่มคำสั่งหลอก (dummy operations) จะทำให้ได้ลำดับคำสั่งที่เหมือนกันสองชุดสำหรับการเพิ่มเป็นสองเท่าและการบวกจุดได้อย่างง่ายดาย แต่นั่นจะทำให้ประสิทธิภาพลดลง
+<br /><br />
+คุณ Performances ผู้ยึดมั่นในหลักการ ได้ใช้ลำดับคำสั่งโดยไม่สูญเสียประสิทธิภาพ! ลำดับของเขาได้รับการปรับให้เหมาะกับเส้นโค้งในรูปแบบ <code>y^2 = x^3 + b</code> และประกอบด้วยการคูณแบบมอดุลาร์เพียง 9 ครั้งเท่านั้น เขาขอท้าให้คุณทำลายการทำงานนี้สำหรับเส้นโค้งมาตรฐาน secp192k1 (ซึ่งมีรูปแบบดังกล่าว) โดยใช้การโจมตีด้วยความผิดพร่อง (fault attack) อย่างไรก็ตาม เขาได้วางมาตรการรับมือเพื่อจำกัดการโจมตีดังกล่าวไว้แล้ว:
+<br /><br />
+- บิตของสเกลาร์จะถูกอ่านสองครั้ง (และเปรียบเทียบกัน) ก่อนที่จะเริ่มลำดับคำสั่ง;
+<br />
+- พิกัดสุดท้าย <code>(x, y)</code> จะต้องประกอบกันเป็นจุดที่ถูกต้องบนเส้นโค้ง
+<br /><br />
+สำหรับสิ่งนี้ เขาได้เตรียมโค้ดแอสเซมบลีพร้อมคำอธิบายเพื่อใช้ในการคำนวณการคูณกับเจเนอเรเตอร์บนเส้นโค้ง ในการแข่งขันนี้ โค้ดจะถูกรันในเครื่องเสมือน (virtual machine) และคุณสามารถระบุคำสั่งที่ต้องการรบกวนได้ ไม่มีการจำกัดจำนวนคำสั่งที่จะรบกวน แต่รูปแบบของความผิดพร่อง (fault model) จะประกอบด้วยการกำหนดค่าแบบสุ่มให้กับรีจิสเตอร์ปลายทางของการดำเนินการเท่านั้น ตัวอย่างเช่น หากต้องการรบกวน 3 คำสั่งแรก ให้ป้อน <code>0 1 2</code> (คั่นด้วยช่องว่าง) หลังเครื่องหมายพร้อมต์
+<br /><br />
+สามารถดูเอกสารประกอบของเครื่องเสมือนได้<a href="https://hackropole.fr/fr/doc/vm2025/">ในหน้านี้</a>
+                            </p>
+                            <h4>ไฟล์ที่ต้องศึกษา:</h4>
+                            <ul>
+                                <li><a href="../files/assembly.py">assembly.py</a></li>
+                                <li><a href="../files/atomic-secable.py">atomic-secable.py</a></li>
+                                <li><a href="../files/crypto_accelerator.py">crypto_accelerator.py</a></li>
+                                <li><a href="../files/ecdsa_keygen.asm">ecdsa_keygen.asm</a></li>
+                                <li><a href="../files/machine_faulted.py">machine_faulted.py</a></li>
+                                <li><a href="../files/machine.py">machine.py</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="row clearfix">
+                    <div class="col-1">
+                        <div class="section-heading">
+                            <h3>FCSC 2025</h3>
+                            <h2 class="section-title">Hackropole</h2>
+                            <p class="section-subtitle">
+                                ลิงก์ทางการ:
+                                <a target="_blank" href="https://hackropole.fr/fr/challenges/hardware/fcsc2025-hardware-atomic-secable/">https://hackropole.fr/fr/challenges/hardware/fcsc2025-hardware-atomic-secable/</a>
+                                <br />
+                                ผู้เขียน: Neige
+                            </p>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="row clearfix">
+                    <div class="col-1">
+                        <div class="section-heading">
+                            <h3>การเรียนรู้</h3>
+                            <h2 class="section-title">เอกสารและวิดีโอ</h2>
+                            <p class="section-subtitle">
+                                ยังไม่มีเอกสารในขณะนี้
+                            </p>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="row clearfix">
+                    <div class="col-1">
+                        <div class="section-heading">
+                            <h3>ความช่วยเหลือ</h3>
+                            <h2 class="section-title">คำแนะนำและคำใบ้</h2>
+                            <p class="section-subtitle">
+                                <a target="_blank"
+                                    href="https://discord.com/channels/1175764392307077120/1175764601716092948">กระทู้บน Discord</a>
+                            </p>
+                        </div>
+                    </div>
+                </article>
+            </section>
+            <!--End of Ctf-->
+        </main>
+        <!--End Main Content Area-->
+
+        <a id="scrollUp" href="#wrapper" style="position: fixed; z-index: 1000;"
+            aria-label="เลื่อนขึ้นด้านบน" title="กลับสู่ด้านบน"></a>
+    </div>
+</body>
+
+</html>

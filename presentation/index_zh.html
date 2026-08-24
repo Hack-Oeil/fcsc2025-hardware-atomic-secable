@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <!--Page Title-->
+    <title>Hack-Oeil - Les CTFs de Cyrhades</title>
+    <!--Meta Keywords and Description-->
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <link rel="shortcut icon" href="./assets/images/favicon.ico" title="Favicon" />
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <script src="./assets/js/highlight.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Vérifie si la fenêtre est dans une iframe
+            if (window.self !== window.top) {
+                document.querySelectorAll('a').forEach((link) => {
+                    link.addEventListener('click', (event) => {
+                        const a = event.target.closest('a[href^="http"]');
+                        if (a) {
+                            event.preventDefault();
+                            window.parent.postMessage({
+                                type: "open-external",
+                                url: a.href
+                            }, "*");
+                        }
+                    });
+                });
+            }
+            // Active la coloration syntaxique :
+            if (window.hljs) {
+                hljs.highlightAll();
+            } else {
+                console.error("Highlight.js non chargé !");
+            }
+        });
+    </script>
+</head>
+
+<body>
+
+    <div id="wrapper">
+        <!--Main Content Area-->
+        <main id="content">
+            <!--Ctf-->
+            <section class="ctf scrollto">
+                <article class="row clearfix">
+                    <div class="col-1">
+                        <div class="section-heading">
+                            <h3>挑战 #578</h3>
+                            <h2 class="section-title">Atomic secable</h2>
+                            <p>
+Performances 先生正在寻找一种高效的椭圆曲线标量乘法算法，同时能够抵御物理攻击。
+<br /><br />
+他选择了遵循原子性（atomicity）原则的椭圆曲线加法法则实现。该原则依靠单一、统一的操作序列来计算点倍加（doubling）或两个不同点的加法；这为抵御执行时间分析攻击甚至侧信道泄漏踪迹分析提供了非常出色的保护。这种保护确实很有必要，因为区分所执行的操作（倍加还是加法）会泄露有关标量比特位的信息，而标量本应保密。
+<br /><br />
+通过添加虚拟操作（dummy operations），很容易为倍加或加法获得两个相同的序列，但这会牺牲性能。
+<br /><br />
+Performances 先生始终坚持自己的原则，采用了一种无性能损失的操作序列！他的序列适用于形如 <code>y^2 = x^3 + b</code> 的曲线，且仅包含 9 次模乘法。他向你发起挑战，要求你利用故障注入攻击（fault attack）攻破他在标准曲线 secp192k1（具有该形式）上的实现。不过，他已经设置了对策来限制此类攻击：
+<br /><br />
+- 在启动序列之前，标量比特位会被读取两次（并进行比对）；
+<br />
+- 最终坐标 <code>(x, y)</code> 必须构成曲线上的一个有效点。
+<br /><br />
+为此，他提供了带有注释的汇编代码，用于计算曲线上基点（生成元）的标量乘法。在本次挑战中，代码将在虚拟机中运行，并且可以指定要干扰的指令。要干扰的指令数量没有限制，但故障模型仅限于为操作的目标寄存器赋予一个随机值。例如，要在前三条指令中注入故障，请在提示符后输入 <code>0 1 2</code>（以空格分隔）。
+<br /><br />
+虚拟机文档可在<a href="https://hackropole.fr/fr/doc/vm2025/">此页面</a>查看。
+                            </p>
+                            <h4>需研究的文件：</h4>
+                            <ul>
+                                <li><a href="../files/assembly.py">assembly.py</a></li>
+                                <li><a href="../files/atomic-secable.py">atomic-secable.py</a></li>
+                                <li><a href="../files/crypto_accelerator.py">crypto_accelerator.py</a></li>
+                                <li><a href="../files/ecdsa_keygen.asm">ecdsa_keygen.asm</a></li>
+                                <li><a href="../files/machine_faulted.py">machine_faulted.py</a></li>
+                                <li><a href="../files/machine.py">machine.py</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="row clearfix">
+                    <div class="col-1">
+                        <div class="section-heading">
+                            <h3>FCSC 2025</h3>
+                            <h2 class="section-title">Hackropole</h2>
+                            <p class="section-subtitle">
+                                官方链接：
+                                <a target="_blank" href="https://hackropole.fr/fr/challenges/hardware/fcsc2025-hardware-atomic-secable/">https://hackropole.fr/fr/challenges/hardware/fcsc2025-hardware-atomic-secable/</a>
+                                <br />
+                                作者：Neige
+                            </p>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="row clearfix">
+                    <div class="col-1">
+                        <div class="section-heading">
+                            <h3>学习</h3>
+                            <h2 class="section-title">文档与视频</h2>
+                            <p class="section-subtitle">
+                                目前暂无文档
+                            </p>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="row clearfix">
+                    <div class="col-1">
+                        <div class="section-heading">
+                            <h3>帮助</h3>
+                            <h2 class="section-title">提示与建议</h2>
+                            <p class="section-subtitle">
+                                <a target="_blank"
+                                    href="https://discord.com/channels/1175764392307077120/1175764601716092948">Discord 讨论帖</a>
+                            </p>
+                        </div>
+                    </div>
+                </article>
+            </section>
+            <!--End of Ctf-->
+        </main>
+        <!--End Main Content Area-->
+
+        <a id="scrollUp" href="#wrapper" style="position: fixed; z-index: 1000;"
+            aria-label="回到顶部" title="回到顶部"></a>
+    </div>
+</body>
+
+</html>

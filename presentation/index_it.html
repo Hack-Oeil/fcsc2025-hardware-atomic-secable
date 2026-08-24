@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <!--Page Title-->
+    <title>Hack-Oeil - Les CTFs de Cyrhades</title>
+    <!--Meta Keywords and Description-->
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <link rel="shortcut icon" href="./assets/images/favicon.ico" title="Favicon" />
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <script src="./assets/js/highlight.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Vérifie si la fenêtre est dans une iframe
+            if (window.self !== window.top) {
+                document.querySelectorAll('a').forEach((link) => {
+                    link.addEventListener('click', (event) => {
+                        const a = event.target.closest('a[href^="http"]');
+                        if (a) {
+                            event.preventDefault();
+                            window.parent.postMessage({
+                                type: "open-external",
+                                url: a.href
+                            }, "*");
+                        }
+                    });
+                });
+            }
+            // Active la coloration syntaxique :
+            if (window.hljs) {
+                hljs.highlightAll();
+            } else {
+                console.error("Highlight.js non chargé !");
+            }
+        });
+    </script>
+</head>
+
+<body>
+
+    <div id="wrapper">
+        <!--Main Content Area-->
+        <main id="content">
+            <!--Ctf-->
+            <section class="ctf scrollto">
+                <article class="row clearfix">
+                    <div class="col-1">
+                        <div class="section-heading">
+                            <h3>Sfida #578</h3>
+                            <h2 class="section-title">Atomic secable</h2>
+                            <p>
+Il Sig. Performances è alla ricerca di un algoritmo efficiente per calcolare la moltiplicazione su una curva ellittica proteggendosi al contempo dagli attacchi fisici.
+<br /><br />
+Ha optato per un'implementazione della legge di addizione sulla curva che rispetta il principio di atomicità. Questo principio si basa su una sequenza unica di operazioni per calcolare il raddoppio di un punto o l'addizione di due punti distinti, offrendo un'eccellente protezione contro gli attacchi basati sull'analisi dei tempi di esecuzione o delle tracce di fuga (canali laterali). Questa protezione è infatti necessaria, poiché distinguere l'operazione eseguita (raddoppio o addizione) rivela informazioni sui bit dello scalare, che dovrebbe rimanere segreto.
+<br /><br />
+Aggiungendo operazioni fittizie è abbastanza facile ottenere due sequenze identiche per il raddoppio o l'addizione di punti, ma ciò andrebbe a discapito delle prestazioni.
+<br /><br />
+Fedele ai suoi principi, il Sig. Performances utilizza una sequenza senza alcuna perdita di prestazioni! La sua sequenza è adatta a curve della forma <code>y^2 = x^3 + b</code> e contiene solo 9 moltiplicazioni modulari. Vi sfida a violare la sua implementazione per la curva standard secp192k1 (che ha la forma corretta) mediante un attacco a iniezione di guasti (fault attack). Tuttavia, ha implementato delle contromisure per limitare un simile attacco:
+<br /><br />
+- i bit dello scalare vengono letti due volte (e confrontati) prima di avviare una sequenza;
+<br />
+- le coordinate finali <code>(x, y)</code> devono formare un punto valido sulla curva.
+<br /><br />
+A tal fine, fornisce il suo codice assembly commentato che permette di calcolare la moltiplicazione con il generatore sulla curva. Nell'ambito della sfida, il codice viene eseguito in una macchina virtuale ed è possibile specificare le istruzioni da alterare. Non vi è alcun limite al numero di istruzioni da alterare, ma il modello di guasto consiste unicamente nell'assegnare un valore casuale al registro di destinazione dell'operazione. Ad esempio, per iniettare guasti nelle prime tre istruzioni, inserire <code>0 1 2</code> (separati da spazi) dopo il prompt.
+<br /><br />
+La documentazione della macchina virtuale è disponibile <a href="https://hackropole.fr/fr/doc/vm2025/">su questa pagina</a>.
+                            </p>
+                            <h4>File da studiare:</h4>
+                            <ul>
+                                <li><a href="../files/assembly.py">assembly.py</a></li>
+                                <li><a href="../files/atomic-secable.py">atomic-secable.py</a></li>
+                                <li><a href="../files/crypto_accelerator.py">crypto_accelerator.py</a></li>
+                                <li><a href="../files/ecdsa_keygen.asm">ecdsa_keygen.asm</a></li>
+                                <li><a href="../files/machine_faulted.py">machine_faulted.py</a></li>
+                                <li><a href="../files/machine.py">machine.py</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="row clearfix">
+                    <div class="col-1">
+                        <div class="section-heading">
+                            <h3>FCSC 2025</h3>
+                            <h2 class="section-title">Hackropole</h2>
+                            <p class="section-subtitle">
+                                Link ufficiale:
+                                <a target="_blank" href="https://hackropole.fr/fr/challenges/hardware/fcsc2025-hardware-atomic-secable/">https://hackropole.fr/fr/challenges/hardware/fcsc2025-hardware-atomic-secable/</a>
+                                <br />
+                                Autore: Neige
+                            </p>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="row clearfix">
+                    <div class="col-1">
+                        <div class="section-heading">
+                            <h3>Apprendimento</h3>
+                            <h2 class="section-title">Documentazione e Video</h2>
+                            <p class="section-subtitle">
+                                Nessuna documentazione al momento
+                            </p>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="row clearfix">
+                    <div class="col-1">
+                        <div class="section-heading">
+                            <h3>Aiuto</h3>
+                            <h2 class="section-title">Consigli e indizi</h2>
+                            <p class="section-subtitle">
+                                <a target="_blank"
+                                    href="https://discord.com/channels/1175764392307077120/1175764601716092948">Discussione su Discord</a>
+                            </p>
+                        </div>
+                    </div>
+                </article>
+            </section>
+            <!--End of Ctf-->
+        </main>
+        <!--End Main Content Area-->
+
+        <a id="scrollUp" href="#wrapper" style="position: fixed; z-index: 1000;"
+            aria-label="Torna in cima" title="Torna in cima alla pagina"></a>
+    </div>
+</body>
+
+</html>

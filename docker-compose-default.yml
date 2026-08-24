@@ -1,0 +1,11 @@
+services:
+  atomic-secable:
+    image: anssi/fcsc2025-hardware-atomic-secable:latest
+    environment:
+      - HOOS_CTF_EMAIL=${HOOS_CTF_EMAIL:-}
+      - HOOS_CTF_USERNAME=${HOOS_CTF_USERNAME:-}
+      - LANGUAGE=${LANGUAGE:-fr}
+    labels:
+      ho.ctf.cyrhades: "challenge"
+    ports:
+      - ${PORT}:4000
